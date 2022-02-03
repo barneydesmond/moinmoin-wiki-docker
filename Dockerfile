@@ -1,11 +1,11 @@
-# VERSION 0.7
+# VERSION 0.8
 # AUTHOR:         Olav Grønås Gjerde <olav@backupbay.com>
-# DESCRIPTION:    Image with MoinMoin wiki, uwsgi, nginx and self signed SSL
-# TO_BUILD:       docker build -t moinmoin .
-# TO_RUN:         docker run -d -p 80:80 -p 443:443 --name my_wiki moinmoin
+# DESCRIPTION:    Image with MoinMoin wiki, uwsgi, nginx, customised for MeidokonWiki
+# TO_BUILD:       docker build -t meidokon_wiki .
+# TO_RUN:         docker run -d -p 80:80 -v /path/to/datavol:/usr/local/share/moin/data --name my_wiki meidokon_wiki
 
 FROM debian:buster-slim
-MAINTAINER Olav Grønås Gjerde <olav@backupbay.com>
+MAINTAINER Barney Desmond <barneydesmond@gmail.com>
 
 # Set the version you want of MoinMoin
 ENV MM_VERSION 1.9.11
@@ -44,7 +44,6 @@ RUN tar xf memodump.tar.gz -C memodump --strip-components=1
 
 # Install MoinMoin
 RUN cd moinmoin && python2.7 setup.py install --force --prefix=/usr/local
-ADD wikiconfig.py /usr/local/share/moin/
 RUN chown -Rh www-data:www-data /usr/local/share/moin/underlay
 USER root
 
@@ -55,6 +54,7 @@ RUN mv memodump/memodump.py /usr/local/lib/python2.7/dist-packages/MoinMoin/them
 # Tweak theme
 RUN rm /usr/local/lib/python2.7/dist-packages/MoinMoin/web/static/htdocs/memodump/css/memodump.css
 ADD memodump.css /usr/local/lib/python2.7/dist-packages/MoinMoin/web/static/htdocs/memodump/css/
+RUN chown www-data:www-data /usr/local/lib/python2.7/dist-packages/MoinMoin/web/static/htdocs/memodump/css/memodump.css
 
 
 # Copy default data into a new folder, we will use this to add content
@@ -64,17 +64,23 @@ RUN cp -r /usr/local/share/moin/data /usr/local/share/moin/bootstrap-data
 RUN chown -R www-data:www-data /usr/local/share/moin/data
 ADD logo.png /usr/local/lib/python2.7/dist-packages/MoinMoin/web/static/htdocs/common/
 
+# Symlink for convenience
+RUN ln -s /usr/local/share/moin /moin
+
 # Configure nginx
 ADD nginx.conf /etc/nginx/
 ADD moinmoin.conf /etc/nginx/sites-enabled/
-RUN mkdir -p /var/cache/nginx/cache
 RUN rm /etc/nginx/sites-enabled/default
+RUN mkdir -p /var/cache/nginx/cache
 
 # Cleanup
 RUN rm -rf moin-$MM_VERSION.tar.gz /moinmoin memodump.tar.gz /memodump
 RUN apt-get purge -qqy curl
 RUN apt-get autoremove -qqy && apt-get clean
 RUN rm -rf /tmp/* /var/lib/apt/lists/*
+
+# Configure the wiki
+ADD wikiconfig.py /usr/local/share/moin/
 
 # Add the start shell script
 ADD start.sh /usr/local/bin/

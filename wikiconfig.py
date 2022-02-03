@@ -72,7 +72,10 @@ class Config(multiconfig.DefaultConfig):
     # Wiki logo. You can use an image, text or both. [Unicode]
     # For no logo or text, use '' - the default is to show the sitename.
     # See also url_prefix setting below!
-    logo_string = u'<img src="%s/common/moinmoin.png" alt="MoinMoin Logo">' % url_prefix_static
+
+    # Commented out to show wikiname instead
+    # https://github.com/dossist/moinmoin-memodump/wiki/Tips#site-logo
+    #logo_string = u'<img src="%s/common/moinmoin.png" alt="MoinMoin Logo">' % url_prefix_static
 
     # name of entry page / front page [Unicode], choose one of those:
 
@@ -188,3 +191,7 @@ class Config(multiconfig.DefaultConfig):
     #chart_options = {'width': 600, 'height': 300}
 
     show_version = True # show moin's version at the bottom of a page
+
+    # Don't show cookiecrumbs on these pages
+    # https://github.com/dossist/moinmoin-memodump#location-area
+    memodump_hidelocation = [page_front_page, u'SideBar', ]
