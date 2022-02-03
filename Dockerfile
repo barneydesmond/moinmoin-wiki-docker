@@ -8,8 +8,8 @@ FROM debian:buster-slim
 MAINTAINER Olav Grønås Gjerde <olav@backupbay.com>
 
 # Set the version you want of MoinMoin
-ENV MM_VERSION 1.9.10
-ENV MM_CSUM 6ae110a22a23bfa6dd5c149b8d66f7ad34976d5d
+ENV MM_VERSION 1.9.11
+ENV MM_CSUM 3eb13b4730bd97259a41c4cd500f8433778ff8cf
 
 # Install software
 RUN apt-get update && apt-get install -qqy --no-install-recommends \
@@ -45,16 +45,9 @@ ADD logo.png /usr/local/lib/python2.7/dist-packages/MoinMoin/web/static/htdocs/c
 
 # Configure nginx
 ADD nginx.conf /etc/nginx/
-ADD moinmoin-nossl.conf /etc/nginx/sites-available/
-ADD moinmoin-ssl.conf /etc/nginx/sites-available/
+ADD moinmoin.conf /etc/nginx/sites-available/
 RUN mkdir -p /var/cache/nginx/cache
 RUN rm /etc/nginx/sites-enabled/default
-
-# Create self signed certificate
-ADD generate_ssl_key.sh /usr/local/bin/
-RUN /usr/local/bin/generate_ssl_key.sh moinmoin.example.org
-RUN mv cert.pem /etc/ssl/certs/
-RUN mv key.pem /etc/ssl/private/
 
 # Cleanup
 RUN rm moin-$MM_VERSION.tar.gz

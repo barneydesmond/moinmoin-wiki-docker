@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # IMPORTANT! This encoding (charset) setting MUST be correct! If you live in a
 # western country and you don't know that you use utf-8, you probably want to
 # use iso-8859-1 (or some other iso charset). If you use utf-8 (a Unicode
@@ -49,9 +49,11 @@ class Config(multiconfig.DefaultConfig):
 
     # Where your own wiki pages are (make regular backups of this directory):
     data_dir = os.path.join(instance_dir, 'data', '') # path with trailing /
+    print "data dir is %s" % data_dir
 
     # Where system and help pages are (you may exclude this from backup):
     data_underlay_dir = os.path.join(instance_dir, 'underlay', '') # path with trailing /
+    print "underlay dir is %s" % data_underlay_dir
 
     # The URL prefix we use to access the static stuff (img, css, js).
     # Note: moin runs a static file server at url_prefix_static path (relative
@@ -65,13 +67,12 @@ class Config(multiconfig.DefaultConfig):
     # Wiki identity ----------------------------------------------------
 
     # Site name, used by default for wiki name-logo [Unicode]
-    sitename = u'Untitled Wiki'
+    sitename = u'Meidokon Wiki'
 
     # Wiki logo. You can use an image, text or both. [Unicode]
     # For no logo or text, use '' - the default is to show the sitename.
     # See also url_prefix setting below!
-    #logo_string = u'<img src="%s/common/moinmoin.png" alt="MoinMoin Logo">' % url_prefix_static
-    logo_string = u'<img src="%s/common/logo.png" alt="Logo">' % url_prefix_static
+    logo_string = u'<img src="%s/common/moinmoin.png" alt="MoinMoin Logo">' % url_prefix_static
 
     # name of entry page / front page [Unicode], choose one of those:
 
@@ -82,17 +83,17 @@ class Config(multiconfig.DefaultConfig):
     page_front_page = u"FrontPage"
 
     # The interwiki name used in interwiki links
-    #interwikiname = u'UntitledWiki'
+    interwikiname = u'MeidokonWiki'
     # Show the interwiki name (and link it to page_front_page) in the Theme,
     # nice for farm setups or when your logo does not show the wiki's name.
-    #show_interwiki = 1
+    show_interwiki = 1
 
 
     # Security ----------------------------------------------------------
 
     # This is checked by some rather critical and potentially harmful actions,
     # like despam or PackageInstaller action:
-    superuser = [u"mmAdmin", ]
+    superuser = [u"furinkan", ]
 
     # Some actions are by default only enabled for superusers and disabled
     # for everybody else.
@@ -101,17 +102,19 @@ class Config(multiconfig.DefaultConfig):
     # A superuser also can use "Settings" -> "Switch user" to create users.
     # If you need the newaccount action for everybody (e.g. to create your
     # very first [superuser] account), you can (temporarily) enable it:
-    actions_superuser = multiconfig.DefaultConfig.actions_superuser[:]
-    actions_superuser.remove('newaccount')
+    #actions_superuser = multiconfig.DefaultConfig.actions_superuser[:]
+    #actions_superuser.remove('newaccount')
 
     # IMPORTANT: grant yourself admin rights! replace YourName with
     # your user name. See HelpOnAccessControlLists for more help.
     # All acl_rights_xxx options must use unicode [Unicode]
-    #acl_rights_before = u"mmAdmin:read,write,delete,revert,admin"
+    acl_rights_before = u"furinkan:read,write,delete,revert,admin"
+
+    acl_hierarchic = True
 
     # This is the default ACL that applies to pages without an ACL.
     # Adapt it to your needs, consider using an EditorGroup.
-    acl_rights_default = u"Trusted:read,write,delete,revert Known:read All:read,write,delete,revert"
+    #acl_rights_default = u"Trusted:read,write,delete,revert Known:read All:read"
 
     # The default (ENABLED) password_checker will keep users from choosing too
     # short or too easy passwords. If you don't like this and your site has
@@ -131,7 +134,7 @@ class Config(multiconfig.DefaultConfig):
     # SMTP server, e.g. "mail.provider.com" (None to disable mail)
     #mail_smarthost = ""
 
-    # The return address, e.g u"J�rgen Wiki <noreply@mywiki.org>" [Unicode]
+    # The return address, e.g u"Jürgen Wiki <noreply@mywiki.org>" [Unicode]
     #mail_from = u""
 
     # "user pwd" if you need to use SMTP AUTH
@@ -184,3 +187,4 @@ class Config(multiconfig.DefaultConfig):
     # Enable graphical charts, requires gdchart.
     #chart_options = {'width': 600, 'height': 300}
 
+    show_version = True # show moin's version at the bottom of a page
