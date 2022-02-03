@@ -9,10 +9,6 @@ if ! [ "$(ls -A /usr/local/share/moin/data/initialized 2>/dev/null)" ]; then
     chown -R www-data:www-data /usr/local/share/moin/data
 fi
 
-# Link active vhost into sites-enabled
-ln -sf /etc/nginx/sites-available/moinmoin.conf \
-    /etc/nginx/sites-enabled/moinmoin.conf
-
 service rsyslog start && service nginx start && uwsgi \
     --uid www-data \
     -s /tmp/uwsgi.sock \
